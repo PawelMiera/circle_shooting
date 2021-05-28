@@ -48,10 +48,8 @@ class PIDs:
         self.is_running = False
         self.update_pids = False
 
-
     def calculate_pids(self):
         if self.update_pids:
-
             self.rollPID.calculate()
             self.pitchPID.calculate()
         else:

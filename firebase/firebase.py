@@ -21,7 +21,7 @@ class FirebaseConnection:
 
         result = self.database.child("circles").child("drones").get()
 
-        self.all_targets = []
+        self.all_targets = self.database.child("circles").child("targets").get().val()
 
         try:
             drone_nr = len(result.val())

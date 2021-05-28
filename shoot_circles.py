@@ -16,17 +16,13 @@ if __name__ == '__main__':
     firebase = FirebaseConnection()
     camera = BasicCamera2()
 
-    firebase.update_target(0, Values.ELIMINATED)
+    #firebase.update_target(0, Values.ELIMINATED)
 
     if Values.PRINT_FPS:
         last_time = time.time()
         ind = 0
 
     current_target = None
-
-    #ros.current_mode = Values.ELIMINATING
-    #pids.update_pids = True               ###te 3  do wywalenia tylko zeby ciagle dzialalo do testow
-    #ros.start_shooting_time = time.time()
 
     while True:
         try:
@@ -79,7 +75,7 @@ if __name__ == '__main__':
                     firebase.update_target(current_target, Values.ELIMINATED)
                     cv2.destroyAllWindows()
 
-                if time.time() - ros.start_shooting_time > 20:
+                if time.time() - ros.start_shooting_time > 5:
                     print("Timeout!")
                     pids.update_pids = False
                     ros.current_mode = Values.WAITING_FOR_TARGET
@@ -99,11 +95,12 @@ if __name__ == '__main__':
 
             elif ros.current_mode == Values.WAITING_FOR_TARGET:
 
-                for index, target in enumerate(firebase.all_targets):
+                for i in range(len(firebase.all_targets)):
+                    target = firebase.all_targets[i]
                     if int(target['eliminated']) == Values.QUEUED:
                         ros.flyToTarget(float(target['latitude']), float(target['longitude']), 6)
-                        current_target = index
-
+                        current_target = i
+                print("Current target:", current_target)
                 time.sleep(1)
 
         except Exception:
